@@ -8,8 +8,8 @@
 #include "snake.h"
 #include <string>
 
-constexpr std::size_t kScreenWidth{640};
-constexpr std::size_t kScreenHeight{640};
+extern std::size_t kScreenWidth;
+extern std::size_t kScreenHeight;
 
 class Renderer {
  public:

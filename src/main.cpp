@@ -1,26 +1,91 @@
-#include <iostream>
-#include "controller.h"
-#include "game.h"
-#include "scores.h"
-#include "renderer.h"
-#include "global_share.h"
-#include <climits>
+#include "main.hpp"
 
 bool global_waitingOnPlayers = true;
 
-int main() {
+int main(int argc, char * argv[]) {
   std::string garbage;
+  std::string kFile{"./.myLeaderboard.txt"};
+  int numPlayers{1};
+  bool loadingMapFile{false};
+  unsigned int scale{0};
 
   constexpr std::size_t kFramesPerSecond{60};
   constexpr std::size_t kMsPerFrame{1000 / kFramesPerSecond};
   //constexpr std::size_t kScreenWidth{640};
   //constexpr std::size_t kScreenHeight{640};
-  constexpr std::size_t kGridWidth{32};
-  constexpr std::size_t kGridHeight{32};
-  std::string kFile{"./.myLeaderboard.txt"};
+  
 
-  int numPlayers;
+  // Get level if set by user
+  // https://stackoverflow.com/questions/52467531/using-getopt-in-c-to-handle-arguments
+  for(;;)
+{
+  switch(getopt(argc, argv, "l:x:y:s:h")) // matches order of case entries
+  {
+    case 'l':
+      std::cout << "Level path " << optarg << " specified.\n";
+      loadingMapFile = true;
+      continue; // sidesteps break at end of for block
+    
+    case 'x':
+      try{
+        kGridWidth = std::stoi(optarg);
+      }
+      catch(std::invalid_argument const& ex)
+      {
+        std::cout << "Bad width [-x] argument.\n";
+        return -1;
+      }
+    continue;
 
+    case 'y':
+      try{
+        kGridHeight = std::stoi(optarg);
+      }
+      catch(std::invalid_argument const& ex)
+      {
+        std::cout << "Bad height [-y] argument.\n";
+        return -1;
+      }
+    continue;
+
+    case 's':
+      try{
+        scale = std::stoi(optarg);
+      }
+      catch(std::invalid_argument const& ex)
+      {
+        std::cout << "Bad height [-y] argument.\n";
+        return -1;
+      }
+    continue;
+
+    case '?':
+    case 'h':
+      std::cout << "./Snake [-l \"path\"] [-x #] [-y #]\n";
+      std::cout << "-h                       \tPrints this help text\n";
+      std::cout << "-l \"path_to_level_file\"\tLoads game with optional level file. Automatically adjusts game size to level size.\n";
+      std::cout << "-x                       \tWidth of level in grid blocks. Overridden by -l\n";
+      std::cout << "-y                       \tHeight of level in grid blocks. Overridden by -l\n";
+      std::cout << "\nPlayer1 controls: ArrowKeys = Up Down Left Right\n";
+//      std::cout << "General controls in game:\n";
+//      std::cout << "r - reset game with existing settings\n";
+//      std::cout << "p - print (save) snapshot of current level to 'timestamp'.slevel file";
+      std::cout << "\n";
+    default :
+      break;
+  }
+  break;
+}
+
+if(scale != 0)
+{
+  kScreenWidth = kGridWidth * scale;
+  kScreenHeight = kGridHeight * scale;
+
+}
+
+#if 0
+  // Get number of players
   std::cout << "\nEnter number of players (Max : 1): ";
   std::cin >> numPlayers;
 
@@ -34,9 +99,12 @@ int main() {
     std::cin >> numPlayers;
   }
   getline(std::cin, garbage); //purge remaining carriage return
-  
-  std::vector<std::string> players;
+#else
+#endif
 
+  std::vector<std::string> players;
+  
+  // Get player names
   for(int i = 1; i <= numPlayers; i++)
   {
     std::string player;
@@ -45,10 +113,10 @@ int main() {
 
     players.emplace_back(player);
   }
-  
-  Renderer renderer(kScreenWidth, kScreenHeight, kGridWidth, kGridHeight); //actual screen
-  Controller controller;  // snake??
-  Game game(kGridWidth, kGridHeight); // ??
+
+  Renderer renderer(kScreenWidth, kScreenHeight, kGridWidth, kGridHeight);  // map needs to atleast have a size before here
+  Controller controller;  // keyboard input control, one instance, can't easily be multiplexed
+  Game game(kGridWidth, kGridHeight); // generates game elements
   game.Run(controller, renderer, kMsPerFrame, numPlayers);
   std::cout << "Game has terminated successfully!\n";
 

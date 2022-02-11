@@ -50,7 +50,7 @@ void LeaderBoard::printScores(std::string const playerName)
     // A large score will offset the name if more than \t worth of digits, but less likely.
     std::cout << player.second << "\t: " << player.first;
     if(player.first == playerName)
-      std::cout << "<<<<<";
+      std::cout << "<|<|<|<|<|<|<|<|<|<|";
 
     std::cout << "\n";
   }
