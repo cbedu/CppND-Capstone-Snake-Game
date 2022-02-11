@@ -15,7 +15,7 @@ void Controller::HandleInput(bool &running, Snake &snake) const {
     if (e.type == SDL_QUIT) {
       running = false;
     } else if (e.type == SDL_KEYDOWN) {
-      switch (e.key.keysym.sym) {
+      switch (e.key.keysym.sym) { // <<TODO>> # This will need to be dependent on keys used by each snake.
         case SDLK_UP:
           ChangeDirection(snake, Snake::Direction::kUp,
                           Snake::Direction::kDown);

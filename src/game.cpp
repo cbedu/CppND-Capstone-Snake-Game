@@ -41,6 +41,10 @@ void Game::Run(Controller const &controller, Renderer &renderer,
       title_timestamp = frame_end;
     }
 
+    // <<TODO>> 1 Add screen rendered score...
+    renderer.UpdateScoreBoard(score);
+
+
     // If the time for this frame is too small (i.e. frame_duration is
     // smaller than the target ms_per_frame), delay the loop to
     // achieve the correct frame rate.
@@ -66,6 +70,14 @@ void Game::PlaceFood() {
 }
 
 void Game::Update() {
+  // <<TODO>> This will need to become a scan for whether any snake is kInitial
+  //  This way we wait on "All Players Ready"
+  if(snake.direction == Snake::Direction::kInitial) return;
+
+  // <<TODO>> on dead a snake may be removed, left in place, or have a countdown to disappear?
+  //  This will also need to then take into account multiple snakes.
+  //  Likely just make this bit a check for whether all snakes are dead and go to gameover screen
+  //  Add a winner display?
   if (!snake.alive) return;
 
   snake.Update();

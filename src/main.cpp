@@ -11,12 +11,16 @@ int main() {
   constexpr std::size_t kGridWidth{32};
   constexpr std::size_t kGridHeight{32};
 
-  Renderer renderer(kScreenWidth, kScreenHeight, kGridWidth, kGridHeight);
-  Controller controller;
-  Game game(kGridWidth, kGridHeight);
+  Renderer renderer(kScreenWidth, kScreenHeight, kGridWidth, kGridHeight); //actual screen
+  Controller controller;  // snake??
+  Game game(kGridWidth, kGridHeight); // ??
   game.Run(controller, renderer, kMsPerFrame);
   std::cout << "Game has terminated successfully!\n";
   std::cout << "Score: " << game.GetScore() << "\n";
   std::cout << "Size: " << game.GetSize() << "\n";
+
+// <<TODO>> 2 Write out score details to a leaderboard file
+//  Will need to sort the list on score
+
   return 0;
 }

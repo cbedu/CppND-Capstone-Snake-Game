@@ -16,8 +16,8 @@ class Game {
   int GetSize() const;
 
  private:
-  Snake snake;
-  SDL_Point food;
+  Snake snake; // <<TODO>> # make vector of unique_ptr
+  SDL_Point food; // <<TODO>> # also make vector? add timeout val
 
   std::random_device dev;
   std::mt19937 engine;
