@@ -1,6 +1,7 @@
 #include "game.h"
 #include <iostream>
 #include "SDL.h"
+#include "global_share.h"
 
 Game::Game(std::size_t grid_width, std::size_t grid_height)
     : snake(grid_width, grid_height),
@@ -9,6 +10,11 @@ Game::Game(std::size_t grid_width, std::size_t grid_height)
       random_h(0, static_cast<int>(grid_height - 1)) {
   PlaceFood();
 }
+
+void Game::Run(Controller const &controller, Renderer &renderer,
+               std::size_t target_frame_duration, int numPlayers) {
+                 this->Run(controller, renderer, target_frame_duration);
+               }
 
 void Game::Run(Controller const &controller, Renderer &renderer,
                std::size_t target_frame_duration) {
@@ -42,7 +48,7 @@ void Game::Run(Controller const &controller, Renderer &renderer,
     }
 
     // <<TODO>> 1 Add screen rendered score...
-    renderer.UpdateScoreBoard(score);
+    //renderer.UpdateScoreBoard(score);
 
 
     // If the time for this frame is too small (i.e. frame_duration is
@@ -72,7 +78,16 @@ void Game::PlaceFood() {
 void Game::Update() {
   // <<TODO>> This will need to become a scan for whether any snake is kInitial
   //  This way we wait on "All Players Ready"
-  if(snake.direction == Snake::Direction::kInitial) return;
+  if(snake.direction == Snake::Direction::kInitial)
+  {
+    //std::cout << "We are waiting\n";
+    global_waitingOnPlayers = true;
+    //return;
+  }else{
+    //std::cout << "Running\n";
+    global_waitingOnPlayers = false;
+    
+  }
 
   // <<TODO>> on dead a snake may be removed, left in place, or have a countdown to disappear?
   //  This will also need to then take into account multiple snakes.

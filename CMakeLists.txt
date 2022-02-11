@@ -18,6 +18,6 @@ PKG_SEARCH_MODULE(SDL2TTF REQUIRED SDL2_ttf)
 include_directories(${SDL2_INCLUDE_DIRS} src)
 include_directories(${SDL2_TTF_INCLUDE_DIR} src)
 
-add_executable(SnakeGame src/main.cpp src/game.cpp src/controller.cpp src/renderer.cpp src/snake.cpp)
+add_executable(SnakeGame src/main.cpp src/game.cpp src/controller.cpp src/renderer.cpp src/snake.cpp src/scores.cpp)
 string(STRIP ${SDL2_LIBRARIES} SDL2_LIBRARIES)
-target_link_libraries(SnakeGame ${SDL2_LIBRARIES} ${SDL2_TTF_LIBRARY} ${SDL2_IMAGE_LIBRARY})
+target_link_libraries(SnakeGame ${SDL2_LIBRARIES} ${SDL2TTF_LIBRARIES} ${SDL2_IMAGE_LIBRARY})
