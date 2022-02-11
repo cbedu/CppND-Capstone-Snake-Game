@@ -19,7 +19,7 @@ std::string LeaderBoard::getName()
   return _name;
 }
 
-void LeaderBoard::setScore(const uint32_t newScore)
+void LeaderBoard::setScore(const unsigned int newScore)
 {
   _score = newScore;
 }
@@ -34,7 +34,7 @@ void LeaderBoard::addPlayer(std::string name, unsigned long score)
   _list.emplace_back(name, score);
 }
 
-void LeaderBoard::printList(std::string const playerName)
+void LeaderBoard::printScores(std::string const playerName)
 {
   // from system monitor course
   std::sort(_list.begin(), _list.end(),
@@ -56,9 +56,9 @@ void LeaderBoard::printList(std::string const playerName)
   }
 }
 
-void LeaderBoard::printList()
+void LeaderBoard::printScores()
 {
-  this->printList(NULL);
+  this->printScores(NULL);
 }
 
 void LeaderBoard::saveScores(std::string filePath)
@@ -87,7 +87,7 @@ void LeaderBoard::loadScores(std::string filePath) {
       std::istringstream stream(line);
       std::string name;
       std::string temp;
-      uint32_t score;
+      unsigned int score;
 
       // ':' used to allow multiple parts to a name
       std::getline(stream, name, ':');

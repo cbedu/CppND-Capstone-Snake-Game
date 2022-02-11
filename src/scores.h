@@ -10,21 +10,24 @@ class LeaderBoard {
   LeaderBoard(const std::string &filePath);
   
   void setName(std::string newName);
-  std::string getName();
+  void setScore(unsigned int newScore);
+  void saveScores(std::string filePath);
   
-  void setScore(uint32_t newScore);
+  std::string getName();
   unsigned long getScore();
+  void loadScores(std::string filePath);
+
+  void printScores(std::string const playerName);
+  void printScores();
 
   void addPlayer(std::string name, unsigned long score);
-  void printList(std::string const playerName);
-  void printList();
-  void saveScores(std::string filePath);
-  void loadScores(std::string filePath);
 
  private:
   std::string _name;
-  uint32_t _score{0};
-  std::vector<std::pair<std::string, uint32_t>> _list;
+  unsigned int _score{0};
+
+  // couple playerNames and scores for now, to be replaced with class.
+  std::vector<std::pair<std::string, unsigned int>> _list;
 };
 
 #endif

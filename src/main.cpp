@@ -69,7 +69,7 @@ int main() {
   LeaderBoard scores(kFile);
   // scores.LoadList(kFile);
   scores.addPlayer(*(players.begin()), game.GetScore());
-  scores.printList(*(players.begin()));
+  scores.printScores(*(players.begin()));
   scores.saveScores(kFile);
 
   return 0;
