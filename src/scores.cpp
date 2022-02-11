@@ -34,7 +34,7 @@ void LeaderBoard::addPlayer(std::string name, unsigned long score)
   _list.emplace_back(name, score);
 }
 
-void LeaderBoard::printList()
+void LeaderBoard::printList(std::string const playerName)
 {
   // from system monitor course
   std::sort(_list.begin(), _list.end(),
@@ -48,8 +48,17 @@ void LeaderBoard::printList()
   {
     // score first to reduce the amount of indenting control needed.
     // A large score will offset the name if more than \t worth of digits, but less likely.
-    std::cout << player.second << "\t: " << player.first << "\n";
+    std::cout << player.second << "\t: " << player.first;
+    if(player.first == playerName)
+      std::cout << "<<<<<";
+
+    std::cout << "\n";
   }
+}
+
+void LeaderBoard::printList()
+{
+  this->printList(NULL);
 }
 
 void LeaderBoard::saveScores(std::string filePath)

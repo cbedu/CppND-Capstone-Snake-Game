@@ -16,9 +16,10 @@ class LeaderBoard {
   unsigned long getScore();
 
   void addPlayer(std::string name, unsigned long score);
+  void printList(std::string const playerName);
   void printList();
-  void saveScores(std::string File);
-  void loadScores(std::string File);
+  void saveScores(std::string filePath);
+  void loadScores(std::string filePath);
 
  private:
   std::string _name;

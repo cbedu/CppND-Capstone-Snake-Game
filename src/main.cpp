@@ -52,13 +52,16 @@ int main() {
   game.Run(controller, renderer, kMsPerFrame, numPlayers);
   std::cout << "Game has terminated successfully!\n";
 
-  std::cout << "FinalSize\t: PeakSize\t: Score\t: PlayerName\n";
+  std::cout <<
+    //"FinalSize\t: PeakSize\t: " <<
+    "Score\t: PlayerName\n";
+  
   for(auto player: players)
   {
-    std::cout << game.GetSize() << "\t: ";
-    std::cout << game.GetSize() << "\t: ";
+  //  std::cout << game.GetSize() << "\t: ";
+  //  std::cout << game.GetSize() << "\t: ";
     std::cout << game.GetScore() << "\t: ";
-    std::cout << player << "\n";
+    std::cout << player << "\n\n";
   }
 
 // <<TODO>> 2 Write out score details to a leaderboard file
@@ -66,7 +69,7 @@ int main() {
   LeaderBoard scores(kFile);
   // scores.LoadList(kFile);
   scores.addPlayer(*(players.begin()), game.GetScore());
-  scores.printList();
+  scores.printList(*(players.begin()));
   scores.saveScores(kFile);
 
   return 0;
