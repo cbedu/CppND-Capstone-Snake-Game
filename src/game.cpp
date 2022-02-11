@@ -47,10 +47,6 @@ void Game::Run(Controller const &controller, Renderer &renderer,
       title_timestamp = frame_end;
     }
 
-    // <<TODO>> 1 Add screen rendered score...
-    //renderer.UpdateScoreBoard(score);
-
-
     // If the time for this frame is too small (i.e. frame_duration is
     // smaller than the target ms_per_frame), delay the loop to
     // achieve the correct frame rate.

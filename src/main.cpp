@@ -5,6 +5,7 @@
 #include "renderer.h"
 #include "global_share.h"
 #include <climits>
+#include <memory>
 
 bool global_waitingOnPlayers = true;
 
@@ -21,7 +22,7 @@ int main() {
 
   int numPlayers;
 
-  std::cout << "\nEnter number of players (Max : 1): ";
+  std::cout << "\nEnter number of playerNames (Max : 1): ";
   std::cin >> numPlayers;
 
   // Avoid cin stuck state on non 'int'
@@ -35,37 +36,48 @@ int main() {
   }
   getline(std::cin, garbage); //purge remaining carriage return
   
-  std::vector<std::string> players;
+  std::vector<std::string> playerNames;
+  Controller controller;  // snake??
+  
 
   for(int i = 1; i <= numPlayers; i++)
   {
-    std::string player;
+    std::string playerStr;
     std::cout << "\nEnter player " << i++ << "'s name: ";
-    getline(std::cin, player);
+    getline(std::cin, playerStr);
 
-    players.emplace_back(player);
+    playerNames.emplace_back(playerStr);
   }
   
   Renderer renderer(kScreenWidth, kScreenHeight, kGridWidth, kGridHeight); //actual screen
-  Controller controller;  // snake??
-  Game game(kGridWidth, kGridHeight); // ??
-  game.Run(controller, renderer, kMsPerFrame, numPlayers);
+  
+  std::unique_ptr<Game> game;
+
+  if(numPlayers > 1)
+    ;//game = std::make_unique<Game>(kGridWidth, kGridHeight, playerNames);
+  else
+    game = std::make_unique<Game>(kGridWidth, kGridHeight);
+  
+  game->Run(controller, renderer, kMsPerFrame, numPlayers);
+  
   std::cout << "Game has terminated successfully!\n";
 
-  std::cout << "FinalSize\t: PeakSize\t: Score\t: PlayerName\n";
-  for(auto player: players)
+  std::cout << 
+    //"FinalSize\t: PeakSize\t: " << 
+    "Score\t: PlayerName\n";
+  for(auto playerStr: playerNames)
   {
-    std::cout << game.GetSize() << "\t: ";
-    std::cout << game.GetSize() << "\t: ";
-    std::cout << game.GetScore() << "\t: ";
-    std::cout << player << "\n";
+    //std::cout << game->GetSize() << "\t: ";
+    //std::cout << game->GetSize() << "\t: ";
+    std::cout << game->GetScore() << "\t: ";
+    std::cout << playerStr << "\n";
   }
 
 // <<TODO>> 2 Write out score details to a leaderboard file
 //  Will need to sort the list on score
   LeaderBoard scores(kFile);
   // scores.LoadList(kFile);
-  scores.addPlayer(*(players.begin()), game.GetScore());
+  scores.addPlayer(*(playerNames.begin()), game->GetScore());
   scores.printList();
   scores.saveScores(kFile);
 

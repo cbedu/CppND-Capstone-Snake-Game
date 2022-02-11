@@ -11,11 +11,17 @@ class Snake {
  // <<DONE>> 1 Add kInitial direction for initilisation
   enum class Direction { kUp, kDown, kLeft, kRight, kDead, kNone, kInitial };
 
-  Snake(int grid_width, int grid_height)
+  Snake(int grid_width, int grid_height)  // one player and no need for specific spawn
       : grid_width(grid_width),
         grid_height(grid_height),
         head_x(grid_width / 2),
         head_y(grid_height / 2) {}
+  
+  Snake(int grid_width, int grid_height, int targetX, int targetY)  // depending on numPlayers the spawn could be different
+      : grid_width(grid_width),
+        grid_height(grid_height),
+        head_x(targetX),
+        head_y(targetY) {}
 
   void Update();
 
