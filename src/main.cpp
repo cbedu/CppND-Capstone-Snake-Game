@@ -2,7 +2,57 @@
 
 bool global_waitingOnPlayers = true;
 
-std::vector<std::vector<int[3]>> specialTiles;
+class SpecialMapTile {
+  public:
+  SpecialMapTile() : type_{0}, x_(0), y_(0), ttl_(0) {};
+  
+  SpecialMapTile(int _type, int _x, int _y)
+    : type_(_type), x_(_x), y_(_y), ttl_(0), perm_(canBePerm[_type]) {};
+  
+  SpecialMapTile(int _type, int _x, int _y, int _ttl)
+    : type_(_type), x_(_x), y_(_y), ttl_(_ttl), perm_(canBePerm[_type]) {};
+
+  SpecialMapTile(int _type, int _x, int _y, int _ttl, bool _perm)
+    : type_(_type), x_(_x), y_(_y), ttl_(_ttl)
+    {
+      if(canBePerm[_type]){
+        perm_ = _perm;
+      }else{
+        std::cout << "\n\nUnhappy perm state\n\n";
+        perm_ = canBePerm[_type];
+      }
+    };
+
+  void Type(int newType){ type_ = newType; };
+  int Type(void){ return type_; };
+
+  void X(int newX){ x_ = newX; };
+  int X(void){ return x_; };
+  
+  void Y(int newY){ y_ = newY; };
+  int Y(void){ return y_; };
+
+  void TTL(int newTTL){ ttl_ = newTTL; };
+  int TTL(void){ return ttl_; };
+  
+  void IsPerm(bool newPerm){ perm_ = newPerm; };
+  bool IsPerm(void){ return perm_; };
+
+
+  private:
+  int type_; // tile type (1=food, 2=poison, 3=barrier, 0=floor....causes entry to be removed)
+  int x_;    // horizontal location
+  int y_;    // vertical location
+  int ttl_;  // time to live  // cannot be -1 if type cannot be perm // object removed if 0 and not perm
+  bool perm_;
+
+  // tile types:
+  //  0 = floor   default, not part of list, can't be perm, no ttl
+  //  1 = food    can't be perm, can have ttl
+  //  2 = poison  can't be perm, can have ttl
+  //  3 = barrier can be perm, can have ttl
+  constexpr static bool canBePerm[] = {"false", "false", "true"};
+};
 
 int main(int argc, char * argv[]) {
   std::string garbage;
@@ -16,6 +66,7 @@ int main(int argc, char * argv[]) {
   std::shared_ptr<tileMap> barrierMap(new tileMap);
   std::future<bool> ftr_barrierMapLoaded;
   bool barrierMapLoaded{false};
+  std::vector<std::vector<SpecialMapTile>> specialTileList;
 
   constexpr std::size_t kFramesPerSecond{60};
   constexpr std::size_t kMsPerFrame{1000 / kFramesPerSecond};
