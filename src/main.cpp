@@ -2,12 +2,20 @@
 
 bool global_waitingOnPlayers = true;
 
+std::vector<std::vector<int[3]>> specialTiles;
+
 int main(int argc, char * argv[]) {
   std::string garbage;
-  std::string kFile{"./.myLeaderboard.txt"};
+  std::string leaderboardFile{"./.myLeaderboard.txt"};
+  std::string levelFileName;
   int numPlayers{1};
   bool loadingMapFile{false};
   unsigned int scale{0};
+//  tileMap barrierMap;
+//  std::unqie_ptr<tileMap> barrierMap = std::make_unique<tileMap>
+  std::shared_ptr<tileMap> barrierMap(new tileMap);
+  std::future<bool> ftr_barrierMapLoaded;
+  bool barrierMapLoaded{false};
 
   constexpr std::size_t kFramesPerSecond{60};
   constexpr std::size_t kMsPerFrame{1000 / kFramesPerSecond};
@@ -22,7 +30,8 @@ int main(int argc, char * argv[]) {
   switch(getopt(argc, argv, "l:x:y:s:h")) // matches order of case entries
   {
     case 'l':
-      std::cout << "Level path " << optarg << " specified.\n";
+      levelFileName = optarg;
+      std::cout << "Level path " << levelFileName << " specified.\n";
       loadingMapFile = true;
       continue; // sidesteps break at end of for block
     
@@ -81,12 +90,11 @@ if(scale != 0)
 {
   kScreenWidth = kGridWidth * scale;
   kScreenHeight = kGridHeight * scale;
-
 }
 
-#if 0
+#if 0 // disabled (partial multiplayer testing)
   // Get number of players
-  std::cout << "\nEnter number of players (Max : 1): ";
+  std::cout << "\nEnter number of players (Max : 1): "; // <<TODO>> add to command line args
   std::cin >> numPlayers;
 
   // Avoid cin stuck state on non 'int'
@@ -99,7 +107,6 @@ if(scale != 0)
     std::cin >> numPlayers;
   }
   getline(std::cin, garbage); //purge remaining carriage return
-#else
 #endif
 
   std::vector<std::string> players;
@@ -114,12 +121,25 @@ if(scale != 0)
     players.emplace_back(player);
   }
 
+#if 0
+  if(loadingMapFile)
+  {
+    //async load of mapfile into a unique_ptr for the mapTiles object.
+    ftr_barrierMap = std::async(loadBarrierMap, levelFileName, barrierMap);
+  }
+#endif
+
+  if(loadingMapFile)
+  {
+    barrierMapLoaded = ftr_barrierMapLoaded.get();
+  }
+
   Renderer renderer(kScreenWidth, kScreenHeight, kGridWidth, kGridHeight);  // map needs to atleast have a size before here
   Controller controller;  // keyboard input control, one instance, can't easily be multiplexed
   Game game(kGridWidth, kGridHeight); // generates game elements
   game.Run(controller, renderer, kMsPerFrame, numPlayers);
-  std::cout << "Game has terminated successfully!\n";
 
+  std::cout << "Game has terminated successfully!\n";
   std::cout <<
     //"FinalSize\t: PeakSize\t: " <<
     "Score\t: PlayerName\n";
@@ -134,11 +154,12 @@ if(scale != 0)
 
 // <<TODO>> 2 Write out score details to a leaderboard file
 //  Will need to sort the list on score
-  LeaderBoard scores(kFile);
-  // scores.LoadList(kFile);
-  scores.addPlayer(*(players.begin()), game.GetScore());
-  scores.printScores(*(players.begin()));
-  scores.saveScores(kFile);
+  LeaderBoard scores(leaderboardFile);
+  // scores.LoadList(leaderboardFile);
+  // This section would need to take the array and move through in multiplayer
+  scores.addPlayer(players[0], game.GetScore());
+  scores.printScores(players[0]);
+  scores.saveScores(leaderboardFile);
 
   return 0;
 }

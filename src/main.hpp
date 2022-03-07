@@ -9,6 +9,11 @@
 #include "global_share.h"
 #include <climits>
 #include <getopt.h>
+#include <memory>
+#include <mutex>
+#include <future>
+#include <vector>
+#include <thread>
 
 std::size_t kScreenWidth{640};
 std::size_t kScreenHeight{640};

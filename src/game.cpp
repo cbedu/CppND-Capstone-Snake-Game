@@ -9,6 +9,7 @@ Game::Game(std::size_t grid_width, std::size_t grid_height)
       random_w(0, static_cast<int>(grid_width - 1)),
       random_h(0, static_cast<int>(grid_height - 1)) {
   PlaceFood();
+  PlaceBarriers();
 }
 
 void Game::Run(Controller const &controller, Renderer &renderer,
@@ -60,7 +61,7 @@ void Game::Run(Controller const &controller, Renderer &renderer,
   }
 }
 
-void Game::PlaceFood() {
+void Game::PlaceFood() { // <<TODO>> ensure not to place on barrier
   int x, y;
   while (true) {
     x = random_w(engine);
@@ -73,6 +74,10 @@ void Game::PlaceFood() {
       return;
     }
   }
+}
+
+void Game::PlaceBarriers() {
+  return;
 }
 
 void Game::Update() {
@@ -104,6 +109,7 @@ void Game::Update() {
   if (food.x == new_x && food.y == new_y) {
     score++;
     PlaceFood();
+    PlaceBarriers();
     // Grow snake and increase speed.
     snake.GrowBody();
     snake.speed += 0.02;
