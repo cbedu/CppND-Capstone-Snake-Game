@@ -36,6 +36,13 @@ void Snake::UpdateHead() {
     case Direction::kRight:
       head_x += speed;
       break;
+
+    case Direction::kDead: // <<TODO>> # In multiplayer we need to keep going until all but one snake is dead, or even all of them.
+                           // here we can decide what to do. Remember to reflect this in updateBody();
+      break;
+
+    case Direction::kNone: // <<TODO>> # Maybe for a powerup later? (one snake gets a power that causes all other to pause for time)
+      break;
   }
 
   // Wrap the Snake around to the beginning if going off of the screen.
