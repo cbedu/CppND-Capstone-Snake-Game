@@ -81,6 +81,7 @@ int main(int argc, char * argv[]) {
 //      std::cout << "r - reset game with existing settings\n";
 //      std::cout << "p - print (save) snapshot of current level to 'timestamp'.slevel file";
       std::cout << "\n";
+      exit(0);
     default :
       break;
   }
