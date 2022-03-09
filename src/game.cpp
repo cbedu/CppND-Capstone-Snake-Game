@@ -12,8 +12,6 @@ Game::Game(std::size_t grid_width, std::size_t grid_height, std::vector<MapTile>
       random_h(0, static_cast<int>(grid_height - 1)),
       tileList_{std::move(_tileList)} {
   PlaceFood();
-  PlaceBarriers();
-  PlaceTiles();
 }
 
 void Game::Run(Controller const &controller, Renderer &renderer,
@@ -29,6 +27,10 @@ void Game::Run(Controller const &controller, Renderer &renderer,
   Uint32 frame_duration;
   int frame_count = 0;
   bool running = true;
+
+  /*if(tileList_.size() == 0){
+      tileList_.emplace_back(MapTile(1,1,1));
+  }*/
 
   while (running) {
     frame_start = SDL_GetTicks();
@@ -82,16 +84,6 @@ void Game::PlaceFood() { // <<TODO>> ensure not to place on barrier
       return;
     }
   }
-}
-
-void Game::PlaceBarriers() {
-  return;
-}
-
-void Game::PlaceTiles() {
-    // To become global placing over the top of place food and place barriers
-    
-  return;
 }
 
 void Game::Update() {

@@ -34,8 +34,6 @@ class Game {
   size_t gridH;
 
   void PlaceFood();
-  void PlaceBarriers();
-  void PlaceTiles();
   void Update();
 };
 
