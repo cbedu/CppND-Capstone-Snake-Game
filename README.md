@@ -6,9 +6,6 @@ This repo is a fork for the Capstone project in the [Udacity C++ Nanodegree Prog
 
 ## Changes from the example repo:
 
-
-### Added
-
 This build now asks for the "player 1" name. Full on dynamic addition of players was not added.
 
 A leaderboard is maintained between runs by writing to and reading from a local hidden file.
