@@ -21,20 +21,6 @@ A rectangular CSV map file can be loaded. It must consist of rows with newlines 
 
 0 = default floor tile, 1 = food tile. See "testMap.smap" for example map.
 
-### Further Ideas
-
-Multiplayer - multiple users all running their own snake on a single keyboard. (Currently at the back due to the size of the work).
-
-More food types - Different colours to represent different food, E.g. big food, gives more size, poison food, slows snake, anti-food, reduce snake size. (a list of types rather than just single food check entry)
-
-Add barriers - walls that have to be navigated around. (just treat them as stationary bits of snake)
-
-Powerups - E.g. magnetic head to attract food. (An extension of same work that "more food types" would require)
-
-Enemy AI - another snake attempting to eat the food before you. (similar to multiplayer)
-
-Mutex controlled thread for Renderer. (potentially a lot of quirks to make it safe)
-
 ## Target Rubric
 
 * A variety of control structures are used in the project. The project code is clearly organized into functions.
@@ -69,6 +55,20 @@ Mutex controlled thread for Renderer. (potentially a lot of quirks to make it sa
     * const read only of map filepath
     * modify the grid height and width of the renderer based off the dimensions detected from the loaded map
   * Game is given the vector via an rvalue through std::move
+
+## Further Ideas
+
+Multiplayer - multiple users all running their own snake on a single keyboard. (Currently at the back due to the size of the work).
+
+More food types - Different colours to represent different food, E.g. big food, gives more size, poison food, slows snake, anti-food, reduce snake size. (a list of types rather than just single food check entry)
+
+Add barriers - walls that have to be navigated around. (just treat them as stationary bits of snake)
+
+Powerups - E.g. magnetic head to attract food. (An extension of same work that "more food types" would require)
+
+Enemy AI - another snake attempting to eat the food before you. (similar to multiplayer)
+
+Mutex controlled thread for Renderer. (potentially a lot of quirks to make it safe)
 
 ## Dependencies for Running Locally
 * cmake >= 3.7
