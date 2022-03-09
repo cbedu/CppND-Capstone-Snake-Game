@@ -4,9 +4,12 @@
 #include <vector>
 #include "SDL.h"
 
+
+// <<TODO>> # add hunger timeout
 class Snake {
  public:
-  enum class Direction { kUp, kDown, kLeft, kRight };
+ // <<DONE>> 1 Add kInitial direction for initilisation
+  enum class Direction { kUp, kDown, kLeft, kRight, kDead, kNone, kInitial };
 
   Snake(int grid_width, int grid_height)
       : grid_width(grid_width),
@@ -19,7 +22,7 @@ class Snake {
   void GrowBody();
   bool SnakeCell(int x, int y);
 
-  Direction direction = Direction::kUp;
+  Direction direction = Direction::kInitial;
 
   float speed{0.1f};
   int size{1};
