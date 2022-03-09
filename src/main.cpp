@@ -92,13 +92,6 @@ if(loadingMapFile == true)
   // load the file, then iterate over lines, for each line we append each entry to the inner vector,
   // each line increments the outer vector
   mapFileLoaded = MapLoader::Load(tileList, levelFileName, kGridHeight, kGridWidth);
-  
-  // adjust our game size to fit the map.
-  if(mapFileLoaded == true)
-  {
-    //kGridHeight = tileList.size();
-    //kGridWidth = tileList[0].size();
-  }
 
   std::cout << "Map size is [" << kGridWidth << "," << kGridHeight << "]" << std::endl;
   
@@ -106,10 +99,7 @@ if(loadingMapFile == true)
   //the food generation will then kick in and place something regardless.
 }
 
-//for(auto tileRow : tileList)
-//for(auto tile : tileRow)
 for(auto tile : tileList)
-//for(auto tile : tileRow)
 {
   std::cout << "Tile [" << tile.X() << "," << tile.Y() << "] is of type [" << tile.Type() << "]" << std::endl;
 }
@@ -119,23 +109,6 @@ if(scale != 0)
   kScreenWidth = kGridWidth * scale;
   kScreenHeight = kGridHeight * scale;
 }
-
-#if 0 // disabled (partial multiplayer testing)
-  // Get number of players
-  std::cout << "\nEnter number of players (Max : 1): "; // <<TODO>> add to command line args
-  std::cin >> numPlayers;
-
-  // Avoid cin stuck state on non 'int'
-  // https://stackoverflow.com/questions/11523569/how-can-i-avoid-char-input-for-an-int-variable
-  while (std::cin.fail() || (numPlayers <= 0)){
-    if(numPlayers <= 0)
-      std::cout << "\nBad player count. Please enter a valid number.\n";
-    std::cin.clear(); // clear input buffer to restore cin to a usable state
-    std::cin.ignore(INT_MAX, '\n'); // ignore last input
-    std::cin >> numPlayers;
-  }
-  getline(std::cin, garbage); //purge remaining carriage return
-#endif
 
   std::vector<std::string> players;
   
@@ -148,19 +121,6 @@ if(scale != 0)
 
     players.emplace_back(player);
   }
-
-#if 0
-  if(loadingMapFile)
-  {
-    //async load of mapfile into a unique_ptr for the mapTiles object.
-    ftr_barrierMap = std::async(loadBarrierMap, levelFileName, barrierMap);
-  }
-
-  if(loadingMapFile)
-  {
-    barrierMapLoaded = ftr_barrierMapLoaded.get();
-  }
-#endif
 
   Renderer renderer(kScreenWidth, kScreenHeight, kGridWidth, kGridHeight);  // map needs to atleast have a size before here
   Controller controller;  // keyboard input control, one instance, can't easily be multiplexed
