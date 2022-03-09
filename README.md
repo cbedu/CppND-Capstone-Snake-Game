@@ -127,6 +127,16 @@ A rectangular CSV map file can be loaded. It must consist of rows with newlines 
     * modify the grid height and width of the renderer based off the dimensions detected from the loaded map
   * Game is given the vector via an rvalue through std::move
 
+## Other silly things I liked
+
+* Added support for long form names E.g. Bobby Bob McBob
+
+* Leaderboard shows where your name appears
+
+* If using a map it will force the grid size, but scale and resolution can be defined by the user in command args.
+
+* Scale will be calced if grid and resolution provided by user command args.
+
 ## Further Ideas
 
 Multiplayer - multiple users all running their own snake on a single keyboard. (Currently at the back due to the size of the work).
