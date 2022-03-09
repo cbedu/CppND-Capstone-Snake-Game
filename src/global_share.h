@@ -5,11 +5,7 @@
 
 extern bool global_waitingOnPlayers;
 
-// Needs rule of 5 for unique_ptr move semantics
-struct tileMap {
-    int width{0};
-    int height{0};
-    std::vector<std::vector<int>> tiles;
-};
+constexpr std::size_t kTileTypes{4};
+enum TILE_TYPES {FLOOR_TILE, FOOD_TILE, POISON_TILE, BARRIER_TILE};
 
 #endif

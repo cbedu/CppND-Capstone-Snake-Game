@@ -3,13 +3,15 @@
 #include "SDL.h"
 #include "global_share.h"
 
-Game::Game(std::size_t grid_width, std::size_t grid_height)
+Game::Game(std::size_t grid_width, std::size_t grid_height, std::vector<std::vector<MapTile>> &&_tileList)
     : snake(grid_width, grid_height),
       engine(dev()),
       random_w(0, static_cast<int>(grid_width - 1)),
-      random_h(0, static_cast<int>(grid_height - 1)) {
+      random_h(0, static_cast<int>(grid_height - 1)),
+      tileList_{std::move(_tileList)} {
   PlaceFood();
   PlaceBarriers();
+  PlaceTiles();
 }
 
 void Game::Run(Controller const &controller, Renderer &renderer,
@@ -32,6 +34,7 @@ void Game::Run(Controller const &controller, Renderer &renderer,
     // Input, Update, Render - the main game loop.
     controller.HandleInput(running, snake);
     Update();
+//    renderer.Render(snake, food, tileList_);
     renderer.Render(snake, food);
 
     frame_end = SDL_GetTicks();
@@ -77,6 +80,12 @@ void Game::PlaceFood() { // <<TODO>> ensure not to place on barrier
 }
 
 void Game::PlaceBarriers() {
+  return;
+}
+
+void Game::PlaceTiles() {
+    int foodEntries{0};
+    
   return;
 }
 

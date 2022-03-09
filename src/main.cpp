@@ -2,56 +2,45 @@
 
 bool global_waitingOnPlayers = true;
 
-class SpecialMapTile {
+// Class to hold tile information
+
+class MapLoader {
   public:
-  SpecialMapTile() : type_{0}, x_(0), y_(0), ttl_(0) {};
-  
-  SpecialMapTile(int _type, int _x, int _y)
-    : type_(_type), x_(_x), y_(_y), ttl_(0), perm_(canBePerm[_type]) {};
-  
-  SpecialMapTile(int _type, int _x, int _y, int _ttl)
-    : type_(_type), x_(_x), y_(_y), ttl_(_ttl), perm_(canBePerm[_type]) {};
+  MapLoader(){}
 
-  SpecialMapTile(int _type, int _x, int _y, int _ttl, bool _perm)
-    : type_(_type), x_(_x), y_(_y), ttl_(_ttl)
-    {
-      if(canBePerm[_type]){
-        perm_ = _perm;
-      }else{
-        std::cout << "\n\nUnhappy perm state\n\n";
-        perm_ = canBePerm[_type];
+  bool static Load(std::vector<std::vector<MapTile>> &tiles, std::string &mapFilePath)
+  {
+    bool processedAnything{false};
+    std::string line;
+    int tileType{0};
+    int x{0};
+    int y{0};
+
+    std::ifstream filestream(mapFilePath);
+    if (filestream.is_open()) {
+      while (std::getline(filestream, line)) {
+        std::replace(line.begin(), line.end(), ',', ' ');
+        std::istringstream linestream(line);
+        while (linestream >> tileType)
+        {
+          if(tileType != 0)
+          {
+            std::cout << "Creating tile of type " << tileType << " with position [" << x << "," << y << "]" << std::endl;
+            MapTile tempTile = MapTile(tileType, x, y);
+            tiles[tileType].emplace_back(tempTile);
+          }
+
+          x++; // we processed an element
+        }
+        x = 0;
+        y++; // we have populated a row
       }
-    };
-
-  void Type(int newType){ type_ = newType; };
-  int Type(void){ return type_; };
-
-  void X(int newX){ x_ = newX; };
-  int X(void){ return x_; };
-  
-  void Y(int newY){ y_ = newY; };
-  int Y(void){ return y_; };
-
-  void TTL(int newTTL){ ttl_ = newTTL; };
-  int TTL(void){ return ttl_; };
-  
-  void IsPerm(bool newPerm){ perm_ = newPerm; };
-  bool IsPerm(void){ return perm_; };
-
-
-  private:
-  int type_; // tile type (1=food, 2=poison, 3=barrier, 0=floor....causes entry to be removed)
-  int x_;    // horizontal location
-  int y_;    // vertical location
-  int ttl_;  // time to live  // cannot be -1 if type cannot be perm // object removed if 0 and not perm
-  bool perm_;
-
-  // tile types:
-  //  0 = floor   default, not part of list, can't be perm, no ttl
-  //  1 = food    can't be perm, can have ttl
-  //  2 = poison  can't be perm, can have ttl
-  //  3 = barrier can be perm, can have ttl
-  constexpr static bool canBePerm[] = {"false", "false", "true"};
+    }
+    if(y > 0)
+      return true;
+      
+    return false;
+  }
 };
 
 int main(int argc, char * argv[]) {
@@ -60,13 +49,14 @@ int main(int argc, char * argv[]) {
   std::string levelFileName;
   int numPlayers{1};
   bool loadingMapFile{false};
+  bool mapFileLoaded{false};
   unsigned int scale{0};
 //  tileMap barrierMap;
 //  std::unqie_ptr<tileMap> barrierMap = std::make_unique<tileMap>
-  std::shared_ptr<tileMap> barrierMap(new tileMap);
+//  std::shared_ptr<tileMap> barrierMap(new tileMap);
   std::future<bool> ftr_barrierMapLoaded;
   bool barrierMapLoaded{false};
-  std::vector<std::vector<SpecialMapTile>> specialTileList;
+  std::vector<std::vector<MapTile>> tileList(kTileTypes);
 
   constexpr std::size_t kFramesPerSecond{60};
   constexpr std::size_t kMsPerFrame{1000 / kFramesPerSecond};
@@ -114,7 +104,7 @@ int main(int argc, char * argv[]) {
       }
       catch(std::invalid_argument const& ex)
       {
-        std::cout << "Bad height [-y] argument.\n";
+        std::cout << "Bad height [-s] argument.\n";
         return -1;
       }
     continue;
@@ -135,6 +125,29 @@ int main(int argc, char * argv[]) {
       break;
   }
   break;
+}
+
+if(loadingMapFile == true)
+{
+  // load the file, then iterate over lines, for each line we append each entry to the inner vector,
+  // each line increments the outer vector
+  mapFileLoaded = MapLoader::Load(tileList, levelFileName);
+  
+  // adjust our game size to fit the map.
+  if(mapFileLoaded == true)
+  {
+    kGridHeight = tileList.size();
+    kGridWidth = tileList[0].size();
+  }
+  
+  //if no map was loaded then the map is assumed to be all floor tiles
+  //the food generation will then kick in and place something regardless.
+}
+
+for(auto tileRow : tileList)
+for(auto tile : tileRow)
+{
+  std::cout << "Tile [" << tile.X() << "," << tile.Y() << "] is of type [" << tile.Type() << "]" << std::endl;
 }
 
 if(scale != 0)
@@ -178,16 +191,16 @@ if(scale != 0)
     //async load of mapfile into a unique_ptr for the mapTiles object.
     ftr_barrierMap = std::async(loadBarrierMap, levelFileName, barrierMap);
   }
-#endif
 
   if(loadingMapFile)
   {
     barrierMapLoaded = ftr_barrierMapLoaded.get();
   }
+#endif
 
   Renderer renderer(kScreenWidth, kScreenHeight, kGridWidth, kGridHeight);  // map needs to atleast have a size before here
   Controller controller;  // keyboard input control, one instance, can't easily be multiplexed
-  Game game(kGridWidth, kGridHeight); // generates game elements
+  Game game(kGridWidth, kGridHeight, std::move(tileList)); // generates game elements
   game.Run(controller, renderer, kMsPerFrame, numPlayers);
 
   std::cout << "Game has terminated successfully!\n";
