@@ -75,8 +75,10 @@ void Game::PlaceFood() { // <<TODO>> ensure not to place on barrier
     // Check that the location is not occupied by a snake item before placing
     // food.
     if (!snake.SnakeCell(x, y)) {
-      food.x = x;
-      food.y = y;
+        MapTile temp = MapTile(1, x, y);
+        tileList_.emplace_back(temp);
+//      food.x = x;
+//      food.y = y;
       std::cout << "Food is at [" << x << "," << y << "]" << std::endl;
       return;
     }
@@ -88,7 +90,7 @@ void Game::PlaceBarriers() {
 }
 
 void Game::PlaceTiles() {
-    int foodEntries{0};
+    // To become global placing over the top of place food and place barriers
     
   return;
 }
@@ -119,13 +121,17 @@ void Game::Update() {
   int new_y = static_cast<int>(snake.head_y);
 
   // Check if there's food over here
-  if (food.x == new_x && food.y == new_y) {
+  for( auto tileIT = tileList_.begin() ; tileIT != tileList_.end(); ++tileIT)
+  //if (food.x == new_x && food.y == new_y) {
+    if (tileIT->X() == new_x && tileIT->Y() == new_y) {
+        tileList_.erase(tileIT);
     score++;
     PlaceFood();
-    PlaceBarriers();
     // Grow snake and increase speed.
     snake.GrowBody();
     snake.speed += 0.02;
+
+    break;
   }
 }
 
