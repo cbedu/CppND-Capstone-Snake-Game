@@ -1,7 +1,5 @@
 #include "MapLoader.hpp"
 
-MapLoader::MapLoader(){};
-
 bool MapLoader::Load(std::vector<MapTile> &tiles, std::string &mapFilePath, size_t &height, size_t &width)
 {
 bool processedAnything{false};

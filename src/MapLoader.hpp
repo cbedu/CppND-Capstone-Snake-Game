@@ -10,8 +10,6 @@
 
 class MapLoader {
   public:
-  MapLoader();
-
   bool static Load(std::vector<MapTile> &tiles, std::string &mapFilePath, size_t &height, size_t &width);
 };
 
