@@ -1,5 +1,3 @@
-#pragma once
-
 #ifndef GLOBAL_SHARE_H
 #define GLOBAL_SHARE_H
 

@@ -18,6 +18,80 @@ A rectangular CSV map file can be loaded. It must consist of rows with newlines 
 
 0 = default floor tile, 1 = food tile. See "testMap.smap" for example map.
 
+## File and Class structure
+
+### File tree
+
+* .vscode           (added as part of visual studio code ide)
+  * tasks.json
+  * c_cpp_properties.json
+  * settings.json
+* CODEOWNERS
+* CMakeLists.txt    (modified to add SDL2 find tweak and additional cpp files)
+* emptyMap.smap     (example empty map to show that food is still generated)
+* LICENSE.md
+* README.md         (modified - this file)
+* snake_game.gif
+* src
+  * controller.cpp   
+  * controller.h     
+  * DejaVuSans.ttf   (added - font used for start and death text)
+  * game.cpp         (modified - kInitial support for snake pass, MapTile support)
+  * game.h           (modified - kInitial support for snake pass, MapTile support)
+  * global_share.h   (added - holder for some global vars, E.g. flag to pass snake at start)
+  * LeaderBoard.cpp  (added - leaderboard file load/save)
+  * LeaderBoard.h    (added - leaderboard file load/save)
+  * MapLoader.hpp    (added - factory to load map into MapTile objects)
+  * MapLoader.cpp    (added - factory to load map into MapTile objects)
+  * MapTile.cpp      (added - tile objects to allow map load and multiple food)
+  * MapTile.hpp      (added - tile objects to allow map load and multiple food)
+  * main.cpp         (modified - map load, user settings, leaderboard)
+  * main.hpp         (modified - map load, user settings, leaderboard)
+  * renderer.cpp     (modified - vector of food support)
+  * renderer.h       (modified - vector of food support)
+  * snake.cpp        (added - kInitial for pause at start)
+  * snake.h          (added - kInitial for pause at start)
+* testMap.smap       (example map with good values, and other unused numbers to show they are ignored)
+
+### Class structure (changes from fork base)
+
+* MapLoader
+  * MapLoader::Load
+    * Generated MapTiles and appends to a vector
+
+* MapTile
+  * Per map tile (grid) object
+  * Getters and Setters for each member variable
+  * Only created for non default tiles. E.g. Any non floor tile. If no entry is found, then the tile is assumed to be a floor tile.
+  * Data members:
+    * x_    : x position of tile        (default 0)
+    * y_    : y position of tile        (default 0)
+    * ttl_  : Time To Live in seconds   (default to -1)
+    * perm_ : Permanent flag            (default depends on lookup of tiletype)
+
+* Leaderboard
+  * LeaderBoard(const std::string &filePath);
+    * Loads the contents from the file if available
+    * Generates a paired list of names and scores
+  * void setName(std::string newName);
+    * set the player name for a given entry
+  * std::string getName();
+    * get the player name for the given entry
+  * void setScore(unsigned int newScore);
+    * set the player score for the given entry
+  * unsigned long getScore();
+    * get the player score for the given entry
+  * void addPlayer(std::string name, unsigned long score);
+    * add a new entry to the list of player scores
+  * void printScores(std::string const playerName);
+    * print all scores loaded, and highlight the target playerName ( prefix a lot of "<|" to make the name stand out)
+  * void printScores();
+    * print all scores loaded
+  * void saveScores(std::string filePath);
+    * commit the list to the target file, overwrites if the file exists
+  * void loadScores(std::string filePath);
+    * load the target file if available
+
 ## Target Rubric
 
 * A variety of control structures are used in the project. The project code is clearly organized into functions.

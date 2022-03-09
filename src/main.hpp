@@ -4,7 +4,7 @@
 #include <iostream>
 #include "controller.h"
 #include "game.h"
-#include "scores.h"
+#include "LeaderBoard.h"
 #include "renderer.h"
 #include "global_share.h"
 #include "MapTile.hpp"

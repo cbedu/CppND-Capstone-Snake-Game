@@ -7,7 +7,7 @@
  * Create an "empty" object. type_ of 0 is floor and is not used in these tile objects.
  * 
  */
-MapTile::MapTile() : type_{0}, x_(0), y_(0), ttl_(0) {};
+MapTile::MapTile() : type_(0), x_(0), y_(0) {};
 
 /**
  * @brief Construct a new Map Tile object
@@ -19,7 +19,7 @@ MapTile::MapTile() : type_{0}, x_(0), y_(0), ttl_(0) {};
  * @param _y      Y position
  */
 MapTile::MapTile(int _type, int _x, int _y)
-    : type_(_type), x_(_x), y_(_y), ttl_(0), perm_(canBePerm[_type]) {};
+    : type_(_type), x_(_x), y_(_y), ttl_(-1), perm_(canBePerm[_type]) {};
     
 /**
  * @brief Construct a new Map Tile object
