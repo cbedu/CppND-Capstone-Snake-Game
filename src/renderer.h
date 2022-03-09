@@ -19,8 +19,7 @@ class Renderer {
            const std::size_t grid_width, const std::size_t grid_height);
   ~Renderer();
 
-  void Render(Snake const snake, SDL_Point const &food, std::vector<MapTile> const &_tileList);
-  void Render(Snake const snake, SDL_Point const &food);
+  void Render(Snake const snake, std::vector<MapTile> const &_tileList);
   void UpdateWindowTitle(int score, int fps);
   void SDL_GenerateMessageTexture(SDL_Renderer *sdl_renderer, std::string msg, int alpha, int red, int green, int blue);
 

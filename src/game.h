@@ -22,7 +22,6 @@ class Game {
 
  private:
   Snake snake;
-  SDL_Point food;
   std::vector<MapTile> tileList_;
 
   std::random_device dev;

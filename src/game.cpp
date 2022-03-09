@@ -36,8 +36,7 @@ void Game::Run(Controller const &controller, Renderer &renderer,
     // Input, Update, Render - the main game loop.
     controller.HandleInput(running, snake);
     Update();
-    renderer.Render(snake, food, tileList_);
-//    renderer.Render(snake, food);
+    renderer.Render(snake, tileList_);
 
     frame_end = SDL_GetTicks();
 
@@ -75,7 +74,7 @@ void Game::PlaceFood() { // <<TODO>> ensure not to place on barrier
     // Check that the location is not occupied by a snake item before placing
     // food.
     if (!snake.SnakeCell(x, y)) {
-        MapTile temp = MapTile(1, x, y);
+        MapTile temp = MapTile(1, x, y, -1, false);
         tileList_.emplace_back(temp);
 //      food.x = x;
 //      food.y = y;
@@ -109,10 +108,6 @@ void Game::Update() {
     
   }
 
-  // <<TODO>> on dead a snake may be removed, left in place, or have a countdown to disappear?
-  //  This will also need to then take into account multiple snakes.
-  //  Likely just make this bit a check for whether all snakes are dead and go to gameover screen
-  //  Add a winner display?
   if (!snake.alive) return;
 
   snake.Update();
@@ -122,14 +117,17 @@ void Game::Update() {
 
   // Check if there's food over here
   for( auto tileIT = tileList_.begin() ; tileIT != tileList_.end(); ++tileIT)
-  //if (food.x == new_x && food.y == new_y) {
     if (tileIT->X() == new_x && tileIT->Y() == new_y) {
-        tileList_.erase(tileIT);
-    score++;
-    PlaceFood();
-    // Grow snake and increase speed.
-    snake.GrowBody();
-    snake.speed += 0.02;
+        if(tileIT->IsPerm() == false)
+        {
+            tileList_.erase(tileIT);
+            PlaceFood();
+        }
+
+        score++;
+        // Grow snake and increase speed.
+        snake.GrowBody();
+        snake.speed += 0.02;
 
     break;
   }

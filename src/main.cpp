@@ -65,7 +65,7 @@ class MapLoader {
           if(tileType == 1)
           {
             std::cout << "Creating tile of type " << tileType << " with position [" << x << "," << y << "]" << std::endl;
-            MapTile tempTile = MapTile(tileType, x, y);
+            MapTile tempTile = MapTile(tileType, x, y, -1, false);
             tiles.emplace_back(tempTile);
           }
 
