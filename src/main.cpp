@@ -3,7 +3,7 @@
 bool global_waitingOnPlayers = true;
 
 // Class to hold tile information
-
+/*
 class MapLoader {
   public:
   MapLoader(){}
@@ -42,6 +42,49 @@ class MapLoader {
     return false;
   }
 };
+*/
+class MapLoader {
+  public:
+  MapLoader(){}
+
+  bool static Load(std::vector<MapTile> &tiles, std::string &mapFilePath, size_t &height, size_t &width)
+  {
+    bool processedAnything{false};
+    std::string line;
+    int tileType{0};
+    int x{0};
+    int y{0};
+
+    std::ifstream filestream(mapFilePath);
+    if (filestream.is_open()) {
+      while (std::getline(filestream, line)) {
+        std::replace(line.begin(), line.end(), ',', ' ');
+        std::istringstream linestream(line);
+        while (linestream >> tileType)
+        {
+          if(tileType == 1)
+          {
+            std::cout << "Creating tile of type " << tileType << " with position [" << x << "," << y << "]" << std::endl;
+            MapTile tempTile = MapTile(tileType, x, y);
+            tiles.emplace_back(tempTile);
+          }
+
+          x++; // we processed an element
+        }
+        width = x;
+        x = 0;
+        y++; // we have populated a row
+      }
+    }
+    if(y > 0)
+    {
+        height = y;
+        return true;
+    }
+      
+    return false;
+  }
+};
 
 int main(int argc, char * argv[]) {
   std::string garbage;
@@ -56,7 +99,8 @@ int main(int argc, char * argv[]) {
 //  std::shared_ptr<tileMap> barrierMap(new tileMap);
   std::future<bool> ftr_barrierMapLoaded;
   bool barrierMapLoaded{false};
-  std::vector<std::vector<MapTile>> tileList(kTileTypes);
+  //std::vector<std::vector<MapTile>> tileList(kTileTypes);
+  std::vector<MapTile> tileList;
 
   constexpr std::size_t kFramesPerSecond{60};
   constexpr std::size_t kMsPerFrame{1000 / kFramesPerSecond};
@@ -131,21 +175,25 @@ if(loadingMapFile == true)
 {
   // load the file, then iterate over lines, for each line we append each entry to the inner vector,
   // each line increments the outer vector
-  mapFileLoaded = MapLoader::Load(tileList, levelFileName);
+  mapFileLoaded = MapLoader::Load(tileList, levelFileName, kGridHeight, kGridWidth);
   
   // adjust our game size to fit the map.
   if(mapFileLoaded == true)
   {
-    kGridHeight = tileList.size();
-    kGridWidth = tileList[0].size();
+    //kGridHeight = tileList.size();
+    //kGridWidth = tileList[0].size();
   }
+
+  std::cout << "Map size is [" << kGridWidth << "," << kGridHeight << "]" << std::endl;
   
   //if no map was loaded then the map is assumed to be all floor tiles
   //the food generation will then kick in and place something regardless.
 }
 
-for(auto tileRow : tileList)
-for(auto tile : tileRow)
+//for(auto tileRow : tileList)
+//for(auto tile : tileRow)
+for(auto tile : tileList)
+//for(auto tile : tileRow)
 {
   std::cout << "Tile [" << tile.X() << "," << tile.Y() << "] is of type [" << tile.Type() << "]" << std::endl;
 }

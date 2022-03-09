@@ -3,8 +3,10 @@
 #include "SDL.h"
 #include "global_share.h"
 
-Game::Game(std::size_t grid_width, std::size_t grid_height, std::vector<std::vector<MapTile>> &&_tileList)
-    : snake(grid_width, grid_height),
+Game::Game(std::size_t grid_width, std::size_t grid_height, std::vector<MapTile> &&_tileList)
+    : gridH(grid_height),
+      gridW(grid_width),
+      snake(grid_width, grid_height),
       engine(dev()),
       random_w(0, static_cast<int>(grid_width - 1)),
       random_h(0, static_cast<int>(grid_height - 1)),
@@ -34,8 +36,8 @@ void Game::Run(Controller const &controller, Renderer &renderer,
     // Input, Update, Render - the main game loop.
     controller.HandleInput(running, snake);
     Update();
-//    renderer.Render(snake, food, tileList_);
-    renderer.Render(snake, food);
+    renderer.Render(snake, food, tileList_);
+//    renderer.Render(snake, food);
 
     frame_end = SDL_GetTicks();
 
@@ -67,13 +69,15 @@ void Game::Run(Controller const &controller, Renderer &renderer,
 void Game::PlaceFood() { // <<TODO>> ensure not to place on barrier
   int x, y;
   while (true) {
-    x = random_w(engine);
-    y = random_h(engine);
+    x = random_w(engine) % gridW;
+    y = random_h(engine) % gridH;
+
     // Check that the location is not occupied by a snake item before placing
     // food.
     if (!snake.SnakeCell(x, y)) {
       food.x = x;
       food.y = y;
+      std::cout << "Food is at [" << x << "," << y << "]" << std::endl;
       return;
     }
   }
