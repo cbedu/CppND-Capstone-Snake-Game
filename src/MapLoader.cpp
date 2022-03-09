@@ -1,6 +1,14 @@
 #include "MapLoader.hpp"
 
-bool MapLoader::Load(std::vector<MapTile> &tiles, std::string &mapFilePath, size_t &height, size_t &width)
+/**
+ * @brief Static function used to load map file contents and create a vector of tile objects.
+ * 
+ * @param tiles         Adds relevant tiles as new objects
+ * @param mapFilePath   Used to load file, not modified
+ * @param height        Modified with the number of rows read from the file (if any)
+ * @param width         Modified with the number of column elements read from the last row (the map is assumed to be a rectangle/square)
+ */
+bool MapLoader::Load(std::vector<MapTile> &tiles, std::string const &mapFilePath, size_t &height, size_t &width)
 {
 bool processedAnything{false};
 std::string line;

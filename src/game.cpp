@@ -74,7 +74,7 @@ void Game::PlaceFood() { // <<TODO>> ensure not to place on barrier
     // Check that the location is not occupied by a snake item before placing
     // food.
     if (!snake.SnakeCell(x, y)) {
-        MapTile temp = MapTile(1, x, y, -1, false);
+        MapTile temp = MapTile(1, x, y);
         tileList_.emplace_back(temp);
 //      food.x = x;
 //      food.y = y;
