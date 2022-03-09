@@ -8,6 +8,7 @@
 #include "renderer.h"
 #include "global_share.h"
 #include "MapTile.hpp"
+#include "MapLoader.hpp"
 #include <climits>
 #include <getopt.h>
 #include <memory>
